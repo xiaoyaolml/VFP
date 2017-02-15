@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">VFP</string>
+    <string name="title_activity_timecard">考勤记录</string>
+    <string name="title_activity_device">设备台账</string>
+    <string name="title_activity_workorder">派工单</string>
+</resources>
