@@ -10,6 +10,7 @@ import com.leo.vfp.model.Device;
 import com.leo.vfp.model.Timecard;
 import com.leo.vfp.model.WorkOrder;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -144,7 +145,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, CaptureActivity.class), 0);
             }
         });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        Bundle bundle = data.getExtras();
+        if (bundle == null) {
+            return;
+        }
 
+        if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+            String result = bundle.getString(CodeUtils.RESULT_STRING);
+            Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+            intent.putExtra(TAG, result);
+            startActivity(intent);
+        } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+            Toast.makeText(MainActivity.this, "条码解析失败！", Toast.LENGTH_LONG).show();
+        }
     }
 }
