@@ -1,7 +1,9 @@
 package com.leo.vfp;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -21,7 +23,11 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
     public static final String USERID = "666";
@@ -142,9 +148,26 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_report).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(MainActivity.this, CaptureActivity.class), 0);
+                MainActivityPermissionsDispatcher.showCameraIntentWithCheck(MainActivity.this,
+                        new Intent(MainActivity.this, CaptureActivity.class));
             }
         });
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void showCameraIntent(Intent intent) {
+        startActivityForResult(intent, 0);
+    }
+
+    @OnPermissionDenied(Manifest.permission.CAMERA)
+    void showDeniedCamera() {
+        Toast.makeText(this, R.string.permission_camera_denied, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override

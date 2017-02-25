@@ -5,4 +5,6 @@
     <string name="title_activity_workorder">派工单</string>
     <string name="title_activity_result">扫工序码</string>
     <string name="title_activity_order">当日总工序单</string>
+
+    <string name="permission_camera_denied">权限不足，请打开“相机”权限！</string>
 </resources>
